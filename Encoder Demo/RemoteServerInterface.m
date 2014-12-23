@@ -57,15 +57,22 @@ static id __instance = nil;
 
 #pragma mark - External Interface
 
-- (void)sendFrame:(NSArray *)frame pts:(double)pts
+- (void)sendFrame:(NSData *)frame pts:(double)pts
 {
     // dispatcher --> trigger
     // {
     //      frame: { data: byte[],
     //               castId: number }
     // }
+    
+//    id bytes;
+//    [frame getBytes:(void *)bytes length:[frame length]];
+//    NSUInteger len = [frame length];
+//    Byte *byteData = (Byte*)malloc(len);
+//    memcpy(byteData, [frame bytes], len);
+    
     // JOSH
-    NSDictionary *sendableDict = @{ @"frame" : @{ @"data" : frame,
+    NSDictionary *sendableDict = @{ @"frame" : @{ @"data" : [frame base64Encoding],
                                                   @"cast_id" : PEERFUL_TEST_ROOM_ID }
                                   };
 

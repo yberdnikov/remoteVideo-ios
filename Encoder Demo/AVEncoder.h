@@ -15,6 +15,10 @@
 #import "VideoEncoder.h"
 #import "MP4Atom.h"
 
+#define kHSDidFinishWritingFile     @"HSDidSwapRecordingFiles"
+#define kHSOldFilePathKey           @"HSOldFilePathKey"
+#define kHSNewFilePathKey           @"HSNewFilePathKey"
+
 typedef int (^encoder_handler_t)(NSArray* data, double pts);
 typedef int (^param_handler_t)(NSData* params);
 

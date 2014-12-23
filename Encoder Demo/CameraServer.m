@@ -48,6 +48,16 @@ static CameraServer* theServer;
     if (_session == nil)
     {
         NSLog(@"Starting up server");
+        [[NSNotificationCenter defaultCenter] addObserverForName:kHSDidFinishWritingFile
+                                                          object:nil
+                                                          queue:[NSOperationQueue mainQueue]
+                                                      usingBlock:^(NSNotification *note) {
+                                                          NSString *path = [[note userInfo] objectForKey:kHSOldFilePathKey];
+                                                          if( path ) {
+                                                              NSData *data = [NSData dataWithContentsOfFile:path];
+                                                              [[RemoteServerInterface sharedInstance] sendFrame:data pts:0];
+                                                          }
+                                                      }];
         
         // create capture device with video input
         _session = [[AVCaptureSession alloc] init];
@@ -79,7 +89,7 @@ static CameraServer* theServer;
                 // http://mobile-cast.herokuapp.com/websocket
                 //
                 // JOSH
-                [[RemoteServerInterface sharedInstance] sendFrame:data pts:pts];
+//                [[RemoteServerInterface sharedInstance] sendFrame:data pts:pts];
 //            }
             return 0;
         } onParams:^int(NSData *data) {

@@ -14,8 +14,8 @@ static unsigned int to_host(unsigned char* p)
     return (p[0] << 24) + (p[1] << 16) + (p[2] << 8) + p[3];
 }
 
-#define OUTPUT_FILE_SWITCH_POINT (50 * 1024 * 1024)  // 50 MB switch point
-#define MAX_FILENAME_INDEX  5                       // filenames "capture1.mp4" wraps at capture5.mp4
+#define OUTPUT_FILE_SWITCH_POINT (2 * 1024 * 1024)  // 50 MB switch point
+#define MAX_FILENAME_INDEX  10                       // filenames "capture1.mp4" wraps at capture5.mp4
 
 // store the calculated POC with a frame ready for timestamp assessment
 // (recalculating POC out of order will get an incorrect result)
@@ -301,6 +301,8 @@ static unsigned int to_host(unsigned char* p)
                     // since we don't yet know where the mdat ends
                     _readSource = nil;
                     [oldVideo finishWithCompletionHandler:^{
+                    
+                        [[NSNotificationCenter defaultCenter] postNotificationName:kHSDidFinishWritingFile object:self userInfo:@{ kHSOldFilePathKey : oldVideo.path }];
                         [self swapFiles:oldVideo.path];
                     }];
                 });
@@ -331,7 +333,8 @@ static unsigned int to_host(unsigned char* p)
     [_inputFile closeFile];
     _foundMDAT = false;
     _bytesToNextAtom = 0;
-    [[NSFileManager defaultManager] removeItemAtPath:oldPath error:nil];
+    
+//    [[NSFileManager defaultManager] removeItemAtPath:oldPath error:nil];
     
     
     // open new file and set up dispatch source

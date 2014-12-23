@@ -19,7 +19,7 @@
 // }
 
 + (id)sharedInstance;
-- (void)sendFrame:(NSArray *)frame pts:(double)pts;
+- (void)sendFrame:(NSData *)frame pts:(double)pts;
 - (void)triggerMessagesIndex;
 
 @end
